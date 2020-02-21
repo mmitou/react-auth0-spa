@@ -1,66 +1,25 @@
 import actionCreatorFactory from 'typescript-fsa';
-import createAuth0Client from '@auth0/auth0-spa-js';
-import { takeLatest, fork, call, put } from 'redux-saga/effects';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { bindAsyncAction } from 'typescript-fsa-redux-saga';
-import { SagaIterator } from 'redux-saga';
+import createAuth0Client from '@auth0/auth0-spa-js';
 
-export type Auth0Client = ReturnType<typeof createAuth0Client> | null;
-export type Auth0ClientOptions = {
-	domain:string,
-	client_id:string,
-	redirect_uri: string
+type PromiseWithAuth0Client = ReturnType<typeof createAuth0Client>;
+type ResolvedType<T> = T extends Promise<infer R> ? R : never;
+export type Auth0Client = ResolvedType<PromiseWithAuth0Client>;
+
+// state
+export type Auth0State = {
+	client?: Auth0Client ;
+	user?: any ;
+	error?: Error;
 };
 
-let auth0: Auth0Client | null = null;
+// action
 const actionCreator = actionCreatorFactory();
+export const setAuth0ClientAction = actionCreator<Auth0Client>('auth0/SET_AUTH0CLIENT');
+export const setAuth0UserAction = actionCreator<any>('auth0/SET_AUTH0USER');
 
-async function InvokeHandleRedirectCallback() {
-	if (auth0 == null) {
-		throw new Error('auth0 is null');
-	} 
-	let client = await auth0;
-	await (client.handleRedirectCallback());
-	return;
-}
+// reducer
 
-async function InvokeCreateAuth0Client(opt: Auth0ClientOptions) {
-	const client = await createAuth0Client(opt);
-	return;
-}
-
-// sagas
-export const createAuth0ClientAction =
-	actionCreator.async<Auth0ClientOptions, Auth0Client, Error>('auth0/CREATE_AUTH0CLIENT');
-export const handleRedirectCallbackAction =
-	actionCreator.async<void, void, Error>('auth0/HANDLE_REDIRECT_CALLBACK');
-
-function* createAuth0ClientWorker(opt: Auth0ClientOptions) {
-	yield call(InvokeCreateAuth0Client, opt);
-}
-
-function* handleRedirectCallbackWorker() {
-	yield call(InvokeHandleRedirectCallback);
-}
-
-const boundCreateAuth0ClientWorker =
-	bindAsyncAction(createAuth0ClientAction, {skipStartedAction: true})(createAuth0ClientWorker);
-const boundHandleRedirectCallbackWorker =
-	bindAsyncAction(handleRedirectCallbackAction, {skipStartedAction: true})(handleRedirectCallbackWorker);
-
-function* createAuth0Handler(): SagaIterator {
-	yield takeLatest(createAuth0ClientAction.started, function* ({payload}) {
-		yield call(boundCreateAuth0ClientWorker, payload); 
-	});
-}
- 
-function* redirectCallbackHandler(): SagaIterator {
-	yield takeLatest(handleRedirectCallbackAction.started, function* ({payload}) {
-		yield call(boundHandleRedirectCallbackWorker, payload);
-	});
-}
-
-function* auth0Saga(): SagaIterator {
-	yield fork(createAuth0Handler);
-	yield fork(redirectCallbackHandler);
-}
+export const auth0Reducer = reducerWithInitialState({})
+	.case(setAuth0ClientAction, (state: Auth0State, client: Auth0Client | null) => {return {...state, client};})
+	.case(setAuth0UserAction, (state: Auth0State, user: any | null) => {return {...state, user};});
