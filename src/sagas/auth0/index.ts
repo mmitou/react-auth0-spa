@@ -45,15 +45,19 @@ const boundHandleRedirectCallbackWorker =
 	bindAsyncAction(action.handleRedirectCallback, {skipStartedAction: true})(handleRedirectCallbackWorker);
 
 function* createAuth0Handler(): SagaIterator {
-	yield takeLatest(action.createAuth0Client.started, function* ({payload}) {
-		yield call(boundCreateAuth0ClientWorker, payload); 
-	});
+	while(true) {
+		yield takeLatest(action.createAuth0Client.started, function* ({payload}) {
+			yield call(boundCreateAuth0ClientWorker, payload); 
+		});
+	}
 }
  
 function* redirectCallbackHandler(): SagaIterator {
-	yield takeLatest(action.handleRedirectCallback.started, function* ({payload}) {
-		yield call(boundHandleRedirectCallbackWorker, payload);
-	});
+	while(true) {
+		yield takeLatest(action.handleRedirectCallback.started, function* ({payload}) {
+			yield call(boundHandleRedirectCallbackWorker, payload);
+		});
+	}
 }
 
 export function* rootSaga(): SagaIterator {
