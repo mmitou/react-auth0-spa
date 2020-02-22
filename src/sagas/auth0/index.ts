@@ -3,7 +3,7 @@ import actionCreatorFactory from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { bindAsyncAction } from 'typescript-fsa-redux-saga';
 import { SagaIterator } from 'redux-saga';
-import { setAuth0ClientAction, setAuth0UserAction, Auth0Client } from 'ducks';
+import { action, Auth0Client } from 'ducks';
 import createAuth0Client from '@auth0/auth0-spa-js';
 
 const actionCreator = actionCreatorFactory();
@@ -22,7 +22,7 @@ export const handleRedirectCallbackAction =
 
 function* createAuth0ClientWorker(opt: Auth0ClientOptions) {
 	const client = yield call(createAuth0Client, opt);
-	yield put(setAuth0ClientAction(client));
+	yield put(action.auth0.setAuth0Client(client));
 }
 
 function* handleRedirectCallbackWorker() {
@@ -36,7 +36,7 @@ function* handleRedirectCallbackWorker() {
 	console.log(_redirectLoginResult);
 
 	const user = yield call([client, 'getUser']);
-	yield put(setAuth0UserAction(user));
+	yield put(action.auth0.setAuth0User(user));
 }
 
 const boundCreateAuth0ClientWorker =

@@ -7,7 +7,7 @@ type ResolvedType<T> = T extends Promise<infer R> ? R : never;
 export type Auth0Client = ResolvedType<PromiseWithAuth0Client>;
 
 // state
-export type Auth0State = {
+export type State = {
 	client?: Auth0Client ;
 	user?: any ;
 	error?: Error;
@@ -15,11 +15,12 @@ export type Auth0State = {
 
 // action
 const actionCreator = actionCreatorFactory();
-export const setAuth0ClientAction = actionCreator<Auth0Client>('auth0/SET_AUTH0CLIENT');
-export const setAuth0UserAction = actionCreator<any>('auth0/SET_AUTH0USER');
+export const action = {
+	setAuth0Client: actionCreator<Auth0Client>('auth0/SET_AUTH0CLIENT'),
+	setAuth0User: actionCreator<any>('auth0/SET_AUTH0USER'),
+};
 
 // reducer
-
-export const auth0Reducer = reducerWithInitialState({})
-	.case(setAuth0ClientAction, (state: Auth0State, client: Auth0Client | null) => {return {...state, client};})
-	.case(setAuth0UserAction, (state: Auth0State, user: any | null) => {return {...state, user};});
+export const reducer = reducerWithInitialState({})
+	.case(action.setAuth0Client, (state: State, client: Auth0Client | null) => {return {...state, client};})
+	.case(action.setAuth0User, (state: State, user: any | null) => {return {...state, user};});
