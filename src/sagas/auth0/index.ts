@@ -1,8 +1,6 @@
 import { takeLatest, fork, call, put, select } from 'redux-saga/effects';
 import actionCreatorFactory from 'typescript-fsa';
-import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { bindAsyncAction } from 'typescript-fsa-redux-saga';
-import { SagaIterator } from 'redux-saga';
 import * as ducks from 'ducks';
 import createAuth0Client from '@auth0/auth0-spa-js';
 
@@ -32,7 +30,7 @@ function* handleRedirectCallbackWorker() {
 	}
 	const _redirectLoginResult = yield call([client, 'handleRedirectCallback']);
 
-	// DEBUG
+	// TODO: For debug. remove this.
 	console.log(_redirectLoginResult);
 
 	const user = yield call([client, 'getUser']);
@@ -44,7 +42,7 @@ const boundCreateAuth0ClientWorker =
 const boundHandleRedirectCallbackWorker =
 	bindAsyncAction(action.handleRedirectCallback, {skipStartedAction: true})(handleRedirectCallbackWorker);
 
-function* createAuth0Handler(): SagaIterator {
+function* createAuth0Handler() {
 	while(true) {
 		yield takeLatest(action.createAuth0Client.started, function* ({payload}) {
 			yield call(boundCreateAuth0ClientWorker, payload); 
@@ -52,7 +50,7 @@ function* createAuth0Handler(): SagaIterator {
 	}
 }
  
-function* redirectCallbackHandler(): SagaIterator {
+function* redirectCallbackHandler() {
 	while(true) {
 		yield takeLatest(action.handleRedirectCallback.started, function* ({payload}) {
 			yield call(boundHandleRedirectCallbackWorker, payload);
@@ -60,7 +58,7 @@ function* redirectCallbackHandler(): SagaIterator {
 	}
 }
 
-export function* rootSaga(): SagaIterator {
+export function* rootSaga() {
 	yield fork(createAuth0Handler);
 	yield fork(redirectCallbackHandler);
 }
