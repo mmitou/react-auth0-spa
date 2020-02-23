@@ -28,12 +28,8 @@ function* handleRedirectCallbackWorker() {
 	if (client == null) {
 		throw new Error("state.auth0.client is null");
 	}
-	const _redirectLoginResult = yield call([client, 'handleRedirectCallback']);
-
-	// TODO: For debug. remove this.
-	console.log(_redirectLoginResult);
-
-	const user = yield call([client, 'getUser']);
+	yield call({context: client, fn: client.handleRedirectCallback});
+	const user = yield call({context: client, fn: client.getUser});
 	yield put(ducks.action.auth0.setAuth0User(user));
 }
 
