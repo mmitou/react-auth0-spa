@@ -1,24 +1,23 @@
-import { takeLatest, fork, call, put, select } from 'redux-saga/effects';
+import { take, fork, call, put, select } from 'redux-saga/effects';
 import actionCreatorFactory from 'typescript-fsa';
 import { bindAsyncAction } from 'typescript-fsa-redux-saga';
 import * as ducks from 'ducks';
 import createAuth0Client from '@auth0/auth0-spa-js';
 
-export type Auth0ClientOptions = {
-	domain: string,
-	client_id: string,
-	redirect_uri: string
-};
-
 // action
 const actionCreator = actionCreatorFactory();
 export const action = {
-	createAuth0Client: actionCreator.async<Auth0ClientOptions, ducks.Auth0Client, Error>('auth0/CREATE_AUTH0CLIENT'),
+	createAuth0Client: actionCreator.async<void, ducks.Auth0Client, Error>('auth0/CREATE_AUTH0CLIENT'),
 	handleRedirectCallback: actionCreator.async<void, void, Error>('auth0/HANDLE_REDIRECT_CALLBACK'),
 };
 
 // saga
-function* createAuth0ClientWorker(opt: Auth0ClientOptions) {
+function* createAuth0ClientWorker() {
+	const opt: Auth0ClientOptions = {
+		domain: '',
+		client_id: '',
+		redirect_uril: '',
+	}
 	const client = yield call(createAuth0Client, opt);
 	yield put(ducks.action.auth0.setAuth0Client(client));
 }
@@ -40,17 +39,15 @@ const boundHandleRedirectCallbackWorker =
 
 function* createAuth0Handler() {
 	while(true) {
-		yield takeLatest(action.createAuth0Client.started, function* ({payload}) {
-			yield call(boundCreateAuth0ClientWorker, payload); 
-		});
+		yield take(action.createAuth0Client.started);
+		yield call(boundCreateAuth0ClientWorker); 
 	}
 }
  
 function* redirectCallbackHandler() {
 	while(true) {
-		yield takeLatest(action.handleRedirectCallback.started, function* ({payload}) {
-			yield call(boundHandleRedirectCallbackWorker, payload);
-		});
+		yield take(action.handleRedirectCallback.started);
+		yield call(boundHandleRedirectCallbackWorker);
 	}
 }
 
