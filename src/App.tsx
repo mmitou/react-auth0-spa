@@ -9,7 +9,7 @@ import { Container } from 'react-bootstrap';
 import * as ducks from 'ducks';
 import * as sagas from 'sagas';
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faLink, faPowerOff, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faPowerOff, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Home } from 'components/Home';
 import { About } from 'components/About';
 import { NavigationBar } from 'components/NavigationBar';
@@ -27,7 +27,6 @@ const store = createStore(
 sagaMiddleware.run(sagas.rootSaga);
 
 // fontawsome
-library.add(faLink);
 library.add(faUser);
 library.add(faPowerOff);
 

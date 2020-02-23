@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { action } from 'sagas';
 
 export const NavigationBar = () => {
+	const dispatch = useDispatch();	
+	const stableDispatch = useCallback(dispatch, []);
+
+	useEffect(()=> {
+		stableDispatch(action.auth0.createAuth0Client.started());
+	}, [stableDispatch]);
+
 	return (
 		<Navbar bg="light" className="py-3">
 			<Container>
