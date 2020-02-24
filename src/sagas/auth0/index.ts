@@ -13,10 +13,19 @@ export const action = {
 
 // saga
 function* createAuth0ClientWorker() {
-	const opt: Auth0ClientOptions = {
-		domain: '',
-		client_id: '',
-		redirect_uril: '',
+	if (process.env.REACT_APP_DOMAIN == null) {
+		throw new Error("env not defined");
+	}
+	if (process.env.REACT_APP_CLIENT_ID == null) {
+		throw new Error("env not defined");
+	}
+	if (process.env.REACT_APP_REDIRECT_URI == null) {
+		throw new Error("env not defined");
+	}
+	const opt = {
+		domain: process.env.REACT_APP_DOMAIN,
+		client_id: process.env.REACT_APP_CLIENT_ID,
+		redirect_uril: process.env.REACT_APP_REDIRECT_URI,
 	}
 	const client = yield call(createAuth0Client, opt);
 	yield put(ducks.action.auth0.setAuth0Client(client));
