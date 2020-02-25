@@ -1,28 +1,16 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { Dropdown, Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { action } from 'sagas';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-// debug data
-const user = {
-	nickname: "masayuki.itou.work",
-	name: "masayuki.itou.work@gmail.com",
-	picture: "https://s.gravatar.com/avatar/2149ba262dc19f3d47453f774f23411b?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fma.png",
-	updated_at: "2020-02-23T09:24:50.114Z",
-	email: "masayuki.itou.work@gmail.com",
-	email_verified: true,
-	sub: "auth0|5e312fec5e7dad0e61a1efc1"
-}
-
+import { State, User } from 'ducks';
 
 export const NavigationBar = () => {
+	const user = useSelector<State, User | null >(state => state.auth0.user, shallowEqual);
 	const history = useHistory();
 	const dispatch = useDispatch();	
-	const [isAuthrorized, setIsAuthorized] = useState(true);
-
 	const login = () => {
 		dispatch(action.auth0.createAuth0Client.started());
 	};
@@ -46,7 +34,7 @@ export const NavigationBar = () => {
 						</Nav.Item>
 					</Nav>
 					<Nav>
-						{ isAuthrorized ?
+						{ (user != null) ?
 							(
 							  <Nav.Item>
 								  <Dropdown>

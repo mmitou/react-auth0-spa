@@ -17,3 +17,4 @@ export const action = {
 };
 
 export type Auth0Client = auth0.Auth0Client;
+export type User = auth0.User;
