@@ -18,7 +18,7 @@ export const LoginButton: React.FC = () => {
 		return (<Button className="px-5" onClick={login}>Log in</Button>);
 	} else {
 		return (
-			<Dropdown>
+			<Dropdown alignRight>
 				<Dropdown.Toggle id="profileDropDown" variant="light">
 					<img src={user.picture} alt="Profile" className="nav-user-profile rounded-circle" width="50" />
 				</Dropdown.Toggle>
