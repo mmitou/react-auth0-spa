@@ -12,6 +12,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faPowerOff, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Home } from 'components/Home';
 import { About } from 'components/About';
+import { Callback } from 'components/Callback';
 import { NavigationBar } from 'components/NavigationBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -42,6 +43,9 @@ function App() {
 						</Route>
 						<Route exact path="/about">
 							<About />
+						</Route>
+						<Route exact path="/callback">
+							<Callback />
 						</Route>
 					</Switch>
 				</Container>

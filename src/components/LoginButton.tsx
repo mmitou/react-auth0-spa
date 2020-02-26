@@ -1,4 +1,4 @@
-import React from 'react';
+import React  from 'react';
 import { Dropdown, Button } from 'react-bootstrap';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -6,12 +6,13 @@ import { action } from 'sagas';
 import { State, User } from 'ducks';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const LoginButton: React.FC = () => {
-	const user = useSelector<State, User | null >(state => state.auth0.user, shallowEqual);
+export const LoginButton = () => {
+	const user = useSelector<State, User | null>(state => state.auth0.user, shallowEqual);
 	const history = useHistory();
-	const dispatch = useDispatch();	
+	const dispatch = useDispatch();
+
 	const login = () => {
-		dispatch(action.auth0.createAuth0Client.started());
+		dispatch(action.auth0.loginWithRedirect.started());
 	};
 
 	if (user == null) {
