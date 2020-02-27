@@ -14,6 +14,7 @@
     "@types/node": "^12.0.0",
     "@types/react-redux": "^7.1.7",
     "bootstrap": "^4.4.1",
+    "google-protobuf": "^3.11.4",
     "grpc-web": "^1.0.7",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
@@ -36,7 +37,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "ignorePatterns": [
+      "**/*_pb.js"
+    ]
   },
   "browserslist": {
     "production": [

@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { EchoServiceClient } from 'echo/EchoServiceClientPb';
+import { EchoRequest } from 'echo/echo_pb';
 
 export const Echo = () => {
+	const echoService = useMemo(() => new EchoServiceClient('http://localhost:8080'), []);
 	const [message, setMessage] = useState("");
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setMessage(e.target.value);
 	}
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		alert('A name was submitted: ' + message);
+		const req = new EchoRequest();
+		req.setMessage(message);
+		echoService.echo(req, {}, function(err, res) {
+			alert("echo done. look console");
+			if (err == null) {
+				console.log(res);
+			} else {
+				console.log(err);
+			}
+		});
+
 		e.preventDefault();
 	}
 
