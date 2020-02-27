@@ -14,6 +14,7 @@ import { Home } from 'components/Home';
 import { About } from 'components/About';
 import { Callback } from 'components/Callback';
 import { NavigationBar } from 'components/NavigationBar';
+import { SecuredRoute } from 'components/SecuredRoute';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // browser history
@@ -41,9 +42,9 @@ function App() {
 						<Route exact path="/">
 							<Home />
 						</Route>
-						<Route exact path="/about">
+						<SecuredRoute path="/about">
 							<About />
-						</Route>
+						</SecuredRoute>
 						<Route exact path="/callback">
 							<Callback />
 						</Route>
