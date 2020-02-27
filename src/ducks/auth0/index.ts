@@ -21,7 +21,7 @@ export type State = {
 const actionCreator = actionCreatorFactory();
 export const action = {
 	setAuth0Client: actionCreator<Auth0Client>('auth0/SET_AUTH0CLIENT'),
-	setAuth0User: actionCreator<User>('auth0/SET_AUTH0USER'),
+	setAuth0User: actionCreator<User|null>('auth0/SET_AUTH0USER'),
 };
 
 // reducer

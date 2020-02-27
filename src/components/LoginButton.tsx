@@ -15,6 +15,11 @@ export const LoginButton = () => {
 		dispatch(action.auth0.loginWithRedirect.started());
 	};
 
+	const logout = () => {
+		console.log("logout pushed!");
+		dispatch(action.auth0.logout.started());
+	};
+
 	if (user == null) {
 		return (<Button className="px-5" onClick={login}>Log in</Button>);
 	} else {
@@ -30,7 +35,7 @@ export const LoginButton = () => {
 						<FontAwesomeIcon icon="user" className="mr-2" /> About
 					</Dropdown.Item>
 					<Dropdown.Divider />
-					<Dropdown.Item onClick={() => alert("log out")}>
+					<Dropdown.Item onClick={logout}>
 						<FontAwesomeIcon icon="power-off" className="mr-2" /> Log out
 					</Dropdown.Item>
 

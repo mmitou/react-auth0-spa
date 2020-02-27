@@ -9,6 +9,7 @@ const actionCreator = actionCreatorFactory();
 export const action = {
 	handleRedirectCallback: actionCreator.async<void, void, Error>('auth0/HANDLE_REDIRECT_CALLBACK'),
 	loginWithRedirect: actionCreator.async<void, void, Error>('auth0/LOGIN_WITH_REDIRECT'),
+	logout: actionCreator.async<void, void, Error>('auth0/LOGOUT'),
 };
 
 // saga
@@ -39,18 +40,12 @@ function* handleRedirectCallbackWorker() {
 	if (client == null) {
 		throw new Error("state.auth0.client is null");
 	}
-	console.log("before client.handleRedirectCallback");
 	yield call({context: client, fn: client.handleRedirectCallback});
-	console.log("after client.handleRedirectCallback");
-
-	console.log("before client.getUser");
 	const user = yield call({context: client, fn: client.getUser});
-	console.log("after client.getUser");
-	console.log("user", user);
 	yield put(ducks.action.auth0.setAuth0User(user));
 }
 
-function *loginWithRedirectWorker() {
+function* loginWithRedirectWorker() {
 	const client = yield select(state => state.auth0.client);
 	if (client == null) {
 		throw new Error("state.auth0.client is null");
@@ -58,11 +53,28 @@ function *loginWithRedirectWorker() {
 	yield call({context: client, fn: client.loginWithRedirect});
 }
 
-const boundLoginWithRedirectWorker =
-	bindAsyncAction(action.loginWithRedirect, {skipStartedAction: true})(loginWithRedirectWorker);
+function* logoutWorker() {
+	console.log("logout start");
+	const client = yield select(state => state.auth0.client);
+	if (client == null) {
+		throw new Error("state.auth0.client is null");
+	}
+	console.log("before logout");
+	yield call({context: client, fn: client.logout});
+	console.log("after logout");
+	console.log("befor put user null");
+	yield put(ducks.action.auth0.setAuth0User(null));
+	console.log("after put user null");
+}
 
 const boundHandleRedirectCallbackWorker =
 	bindAsyncAction(action.handleRedirectCallback, {skipStartedAction: true})(handleRedirectCallbackWorker);
+
+const boundLoginWithRedirectWorker =
+	bindAsyncAction(action.loginWithRedirect, {skipStartedAction: true})(loginWithRedirectWorker);
+
+const boundLogoutWorker = 
+	bindAsyncAction(action.logout, {skipStartedAction: true})(logoutWorker);
 
 function* redirectCallbackHandler() {
 	while(true) {
@@ -72,7 +84,7 @@ function* redirectCallbackHandler() {
 	}
 }
 
-function *loginWithRedirectHandler() {
+function* loginWithRedirectHandler() {
 	while(true) {
 		yield take(action.loginWithRedirect.started);
 		yield call(createAuth0ClientWorker);
@@ -80,8 +92,17 @@ function *loginWithRedirectHandler() {
 	}
 }
 
+function* logoutHandler() {
+	while(true) {
+		yield take(action.logout.started);
+		yield call(createAuth0ClientWorker);
+		yield call(boundLogoutWorker);
+	}	
+}
+
 export function* rootSaga() {
-	// yield call(createAuth0ClientWorker);
 	yield fork(redirectCallbackHandler);
 	yield fork(loginWithRedirectHandler);
+	yield fork(logoutHandler);
+
 }
