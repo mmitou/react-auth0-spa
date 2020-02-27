@@ -13,6 +13,7 @@ import { faPowerOff, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Home } from 'components/Home';
 import { About } from 'components/About';
 import { Callback } from 'components/Callback';
+import { Echo } from 'components/Echo';
 import { NavigationBar } from 'components/NavigationBar';
 import { SecuredRoute } from 'components/SecuredRoute';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -41,6 +42,9 @@ function App() {
 					<Switch>
 						<Route exact path="/">
 							<Home />
+						</Route>
+						<Route exact path="/echo">
+							<Echo />
 						</Route>
 						<SecuredRoute path="/about">
 							<About />

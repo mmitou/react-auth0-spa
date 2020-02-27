@@ -19,6 +19,11 @@ export const NavigationBar = () => {
 							</LinkContainer>
 						</Nav.Item>
 						<Nav.Item>
+							<LinkContainer to="/echo">
+								<Nav.Link>Echo</Nav.Link>
+							</LinkContainer>
+						</Nav.Item>
+						<Nav.Item>
 							<LinkContainer to="/about">
 								<Nav.Link>About</Nav.Link>
 							</LinkContainer>
