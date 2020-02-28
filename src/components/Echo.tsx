@@ -13,10 +13,11 @@ export const Echo = () => {
 		const req = new EchoRequest();
 		req.setMessage(message);
 		echoService.echo(req, {}, function(err, res) {
-			alert("echo done. look console");
 			if (err == null) {
-				console.log(res);
+				alert("success. look console");
+				console.log(res.getMessage());
 			} else {
+				alert("fail. look console");
 				console.log(err);
 			}
 		});
