@@ -78,7 +78,7 @@ npm install @types/react-router-bootstrap
 protoc -I backend/echo/ backend/echo/echo.proto --js_out=import_style=commonjs:./src/echo/ --grpc-web_out=import_style=typescript,mode=grpcwebtext:./src/echo/
 ```
 
-### modify package.json
+### modify package.json and .env
 
 [ref](https://github.com/grpc/grpc-web/issues/447#issuecomment-568559394)
 
@@ -91,7 +91,15 @@ modify package.json
   }
 ```
 
+add this line to .env
+
+```
+EXTEND_ESLINT=true
+``
+
 ### install google-protobuf
+
+It's not protobuf.
 
 [ref](https://stackoverflow.com/questions/36173502/error-cannot-find-module-google-protobuf/58502020#58502020)
 
