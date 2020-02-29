@@ -1,27 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import { EchoServiceClient } from 'echo/EchoServiceClientPb';
-import { EchoRequest } from 'echo/echo_pb';
+import { useDispatch } from 'react-redux';
+import { action } from 'sagas';
 
 export const Echo = () => {
-	const echoService = useMemo(() => new EchoServiceClient('http://localhost:8080'), []);
+	const dispatch = useDispatch();
 	const [message, setMessage] = useState("");
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setMessage(e.target.value);
 	}
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		const req = new EchoRequest();
-		req.setMessage(message);
-		echoService.echo(req, {}, function(err, res) {
-			if (err == null) {
-				alert("success. look console");
-				console.log(res.getMessage());
-			} else {
-				alert("fail. look console");
-				console.log(err);
-			}
-		});
-
+		dispatch(action.echo.echo.started(message));
 		e.preventDefault();
 	}
 

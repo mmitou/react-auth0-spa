@@ -10,7 +10,7 @@ export type State = {
 // action
 const actionCreator = actionCreatorFactory();
 export const action = {
-	setClient: actionCreator<EchoServiceClient>('auth0/SET_AUTH0CLIENT'),
+	setClient: actionCreator<EchoServiceClient>('auth0/SET_ECHOSERVICECLIENT'),
 };
 
 // reducer
