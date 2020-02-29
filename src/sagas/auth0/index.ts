@@ -31,7 +31,7 @@ function* createAuth0ClientWorker() {
 			redirect_uri: process.env.REACT_APP_REDIRECT_URI,
 		}
 		const client = yield call(createAuth0Client, opt);
-		yield put(ducks.action.auth0.setAuth0Client(client));
+		yield put(ducks.action.auth0.setClient(client));
 	}
 }
 
@@ -42,7 +42,7 @@ function* handleRedirectCallbackWorker() {
 	}
 	yield call({context: client, fn: client.handleRedirectCallback});
 	const user = yield call({context: client, fn: client.getUser});
-	yield put(ducks.action.auth0.setAuth0User(user));
+	yield put(ducks.action.auth0.setUser(user));
 }
 
 function* loginWithRedirectWorker() {
@@ -54,17 +54,12 @@ function* loginWithRedirectWorker() {
 }
 
 function* logoutWorker() {
-	console.log("logout start");
 	const client = yield select(state => state.auth0.client);
 	if (client == null) {
 		throw new Error("state.auth0.client is null");
 	}
-	console.log("before logout");
 	yield call({context: client, fn: client.logout});
-	console.log("after logout");
-	console.log("befor put user null");
-	yield put(ducks.action.auth0.setAuth0User(null));
-	console.log("after put user null");
+	yield put(ducks.action.auth0.setUser(null));
 }
 
 const boundHandleRedirectCallbackWorker =
@@ -76,7 +71,7 @@ const boundLoginWithRedirectWorker =
 const boundLogoutWorker = 
 	bindAsyncAction(action.logout, {skipStartedAction: true})(logoutWorker);
 
-function* redirectCallbackHandler() {
+function* redirectCallbackWatcher() {
 	while(true) {
 		yield take(action.handleRedirectCallback.started);
 		yield call(createAuth0ClientWorker);
@@ -84,7 +79,7 @@ function* redirectCallbackHandler() {
 	}
 }
 
-function* loginWithRedirectHandler() {
+function* loginWithRedirectWatcher() {
 	while(true) {
 		yield take(action.loginWithRedirect.started);
 		yield call(createAuth0ClientWorker);
@@ -92,7 +87,7 @@ function* loginWithRedirectHandler() {
 	}
 }
 
-function* logoutHandler() {
+function* logoutWatcher() {
 	while(true) {
 		yield take(action.logout.started);
 		yield call(createAuth0ClientWorker);
@@ -101,8 +96,7 @@ function* logoutHandler() {
 }
 
 export function* rootSaga() {
-	yield fork(redirectCallbackHandler);
-	yield fork(loginWithRedirectHandler);
-	yield fork(logoutHandler);
-
+	yield fork(redirectCallbackWatcher);
+	yield fork(loginWithRedirectWatcher);
+	yield fork(logoutWatcher);
 }

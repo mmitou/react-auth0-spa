@@ -14,18 +14,17 @@ export type User = {
 export type State = {
 	client: Auth0Client | null;
 	user: User | null;
-	error: Error | null;
 };
 
 // action
 const actionCreator = actionCreatorFactory();
 export const action = {
-	setAuth0Client: actionCreator<Auth0Client>('auth0/SET_AUTH0CLIENT'),
-	setAuth0User: actionCreator<User|null>('auth0/SET_AUTH0USER'),
+	setClient: actionCreator<Auth0Client>('auth0/SET_AUTH0CLIENT'),
+	setUser: actionCreator<User|null>('auth0/SET_AUTH0USER'),
 };
 
 // reducer
-const initialState: State = {client: null, user: null, error: null };
+const initialState: State = {client: null, user: null};
 export const reducer = reducerWithInitialState(initialState)
-	.case(action.setAuth0Client, (state: State, client: Auth0Client | null): State => {return {...state, client};})
-	.case(action.setAuth0User, (state: State, user: User | null): State => {return {...state, user};});
+	.case(action.setClient, (state: State, client: Auth0Client | null): State => {return {...state, client};})
+	.case(action.setUser, (state: State, user: User | null): State => {return {...state, user};});
