@@ -1,6 +1,7 @@
 import React from 'react';
 import 'App.css';
 import { createStore, applyMiddleware } from 'redux';
+import logger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga'
 import { Provider } from 'react-redux';
 import { Router, Route, Switch } from 'react-router-dom';
@@ -16,6 +17,7 @@ import { Callback } from 'components/Callback';
 import { Echo } from 'components/Echo';
 import { NavigationBar } from 'components/NavigationBar';
 import { SecuredRoute } from 'components/SecuredRoute';
+import { ErrorModal } from 'components/ErrorModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // browser history
@@ -25,7 +27,7 @@ const history = createBrowserHistory();
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
 	ducks.reducer,
-	applyMiddleware(sagaMiddleware)
+	applyMiddleware(logger, sagaMiddleware)
 );
 sagaMiddleware.run(sagas.rootSaga);
 
@@ -38,6 +40,7 @@ function App() {
 		<Provider store={store}>
 			<Router history={history}>
 				<NavigationBar />
+				<ErrorModal />
 				<Container>
 					<Switch>
 						<Route exact path="/">

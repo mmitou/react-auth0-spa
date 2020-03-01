@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { action } from 'sagas';
+import { State } from 'ducks';
+import { EchoResponse } from 'echo/echo_pb';
 
 export const Echo = () => {
+	const res = useSelector<State, EchoResponse | null>(state => state.echo.res, shallowEqual);
 	const dispatch = useDispatch();
 	const [message, setMessage] = useState("");
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,6 +16,7 @@ export const Echo = () => {
 		dispatch(action.echo.echo.started(message));
 		e.preventDefault();
 	}
+	const responseMessage = res == null? "" : res.getMessage();
 
 	return (
 		<Container className="py-5">
@@ -28,6 +32,9 @@ export const Echo = () => {
 						</Col>
 					</Form.Group>
 				</Form>
+			</Row>
+			<Row>
+				{responseMessage}
 			</Row>
 		</Container>
 	);

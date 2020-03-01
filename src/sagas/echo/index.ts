@@ -1,6 +1,5 @@
 import { take, fork, call, put, select } from 'redux-saga/effects';
 import actionCreatorFactory from 'typescript-fsa';
-import { bindAsyncAction } from 'typescript-fsa-redux-saga';
 import * as ducks from 'ducks';
 import { EchoServiceClient } from 'echo/EchoServiceClientPb';
 import { EchoRequest, EchoResponse } from 'echo/echo_pb';
@@ -30,8 +29,7 @@ function* echoWorker(message: string) {
 	}
 
 	async function getToken(): Promise<string> {
-		const token = await auth0Client.getTokenSilently();
-		return token;
+		return await auth0Client.getTokenSilently();
 	};
 
 	const token = yield call(getToken);
@@ -43,23 +41,35 @@ function* echoWorker(message: string) {
 	if (echoClient == null) {
 		throw new Error("state.echo.client is null");
 	}
-	echoClient.echo(req, meta, function(err:Error, res:EchoResponse) {
-		if (err) {
-			console.log("echo failed:", err);
-		} else {
-			console.log("echo succeeded:", res.getMessage());
-		}
-	});
-}
 
-const boundEchoWorker
-	= bindAsyncAction(action.echo, {skipStartedAction: true})(echoWorker);
+	async function invokeEcho() {
+		const p = new Promise((resolve, reject) => {
+			echoClient.echo(req, meta, function(err:Error, res:EchoResponse) {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(res);
+				}
+			});
+		});
+		return p;
+	}
+
+	const res = yield call(invokeEcho);
+	yield put(ducks.action.echo.setEchoResponse(res));
+}
 
 function* echoStartedWatcher() {
 	while(true) {
 		const {payload} = yield take(action.echo.started);
-		yield call(createEchoServiceClientWorker);
-		yield call(boundEchoWorker, payload);
+		try {
+			yield call(createEchoServiceClientWorker);
+			yield call(echoWorker, payload);
+			yield put(action.echo.done(payload));
+		} catch(e) {
+			yield put(action.echo.failed(e));
+			yield put(ducks.action.errors.push(e));
+		}
 	}
 }
 
