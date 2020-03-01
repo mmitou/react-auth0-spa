@@ -17,8 +17,8 @@ function* createEchoServiceClientWorker() {
 		if (process.env.REACT_APP_ECHOSERVICE_URL == null) {
 			throw new Error("process.env.REACT_APP_ECHOSERVICE_URL is not defined");
 		}
-		const client = new EchoServiceClient(process.env.REACT_APP_ECHOSERVICE_URL);
-		yield put(ducks.action.echo.setClient(client));
+		const newClient = new EchoServiceClient(process.env.REACT_APP_ECHOSERVICE_URL);
+		yield put(ducks.action.echo.setClient(newClient));
 	}
 }
 
@@ -44,11 +44,11 @@ function* echoWorker(message: string) {
 
 	async function invokeEcho() {
 		const p = new Promise((resolve, reject) => {
-			echoClient.echo(req, meta, function(err:Error, res:EchoResponse) {
+			echoClient.echo(req, meta, (err:Error, echoRes:EchoResponse) => {
 				if (err) {
 					reject(err);
 				} else {
-					resolve(res);
+					resolve(echoRes);
 				}
 			});
 		});

@@ -7,7 +7,7 @@ import { Spinner } from 'react-bootstrap';
 
 export const Callback = () => {
 	const user = useSelector<State, User | null>(state => state.auth0.user, shallowEqual);
-	const dispatch = useDispatch();	
+	const dispatch = useDispatch();
 	const history = useHistory();
 
 	useEffect(() => {

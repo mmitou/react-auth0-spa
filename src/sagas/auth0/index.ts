@@ -30,8 +30,8 @@ function* createAuth0ClientWorker() {
 			client_id: process.env.REACT_APP_CLIENT_ID,
 			redirect_uri: process.env.REACT_APP_REDIRECT_URI,
 		}
-		const client = yield call(createAuth0Client, opt);
-		yield put(ducks.action.auth0.setClient(client));
+		const newClient = yield call(createAuth0Client, opt);
+		yield put(ducks.action.auth0.setClient(newClient));
 	}
 }
 
@@ -68,7 +68,7 @@ const boundHandleRedirectCallbackWorker =
 const boundLoginWithRedirectWorker =
 	bindAsyncAction(action.loginWithRedirect, {skipStartedAction: true})(loginWithRedirectWorker);
 
-const boundLogoutWorker = 
+const boundLogoutWorker =
 	bindAsyncAction(action.logout, {skipStartedAction: true})(logoutWorker);
 
 function* redirectCallbackWatcher() {
@@ -92,7 +92,7 @@ function* logoutWatcher() {
 		yield take(action.logout.started);
 		yield call(createAuth0ClientWorker);
 		yield call(boundLogoutWorker);
-	}	
+	}
 }
 
 export function* rootSaga() {

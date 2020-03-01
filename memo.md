@@ -110,5 +110,5 @@ npm install google-protobuf
 ### run docker 
 
 ```
-docker run --net=host -it -p 8080:8080 envoy:v1
+docker run --rm --net=host -it -p 8080:8080 envoy:v1
 ```

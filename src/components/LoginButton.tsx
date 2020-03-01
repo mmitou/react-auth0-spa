@@ -16,7 +16,6 @@ export const LoginButton = () => {
 	};
 
 	const logout = () => {
-		console.log("logout pushed!");
 		dispatch(action.auth0.logout.started());
 	};
 
