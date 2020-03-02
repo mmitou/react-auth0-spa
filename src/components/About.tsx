@@ -6,7 +6,7 @@ export const About = () => {
 		<Jumbotron className="mt-4">
 			<h1>About</h1>
 			<p>
-				This is sample.
+				This is test page.
 			</p>
 		</Jumbotron>
 	);
