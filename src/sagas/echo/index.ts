@@ -29,12 +29,9 @@ function* echoWorker(message: string) {
 		throw new Error("state.auth0.client is null");
 	}
 
-	async function getToken(): Promise<string> {
-		return await auth0Client.getTokenSilently();
-	};
-
-	const token = yield call(getToken);
-	const meta = {Authorization: `Bearer ${token}`};
+	const claims = yield call({context: auth0Client, fn: auth0Client.getIdTokenClaims});
+	const idToken = claims.__raw;
+	const meta = {authorization: `Bearer ${idToken}`};
 	const req = new EchoRequest();
 	req.setMessage(message);
 
