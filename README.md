@@ -19,7 +19,7 @@ This sample mainly depends on some tools below.
 
 ## Usage
 
-Please try this sample on Linux.
+Please try this example on Linux.
 
 ### configure Auth0
 
@@ -31,7 +31,7 @@ Please try this sample on Linux.
 
 ### execute Frontend
 
-- checkout this sample
+- checkout this repository
 - execute this command
 
 ```
