@@ -95,7 +95,7 @@ add this line to .env
 
 ```
 EXTEND_ESLINT=true
-``
+```
 
 ### install google-protobuf
 
@@ -110,5 +110,5 @@ npm install google-protobuf
 ### run docker 
 
 ```
-docker run --rm --net=host -it -p 8080:8080 envoy:v1
+docker run --rm --net=host -it envoy:v1
 ```
