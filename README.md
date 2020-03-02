@@ -1,7 +1,7 @@
 react-auth0-spa
 =============================================================
 
-Auht0 Login and API call sample.
+Auht0 Login and API call example.
 
 ![sample](https://user-images.githubusercontent.com/254112/75658899-6cefb300-5cac-11ea-9509-41640ede899c.gif)
 
