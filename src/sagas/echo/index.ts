@@ -1,4 +1,5 @@
 import { take, fork, call, put, select } from 'redux-saga/effects';
+import { bindAsyncAction } from 'typescript-fsa-redux-saga';
 import actionCreatorFactory from 'typescript-fsa';
 import * as ducks from 'ducks';
 import { EchoServiceClient } from 'echo/EchoServiceClientPb';
@@ -59,15 +60,16 @@ function* echoWorker(message: string) {
 	yield put(ducks.action.echo.setEchoResponse(res));
 }
 
+const boundEchoWorker =
+	bindAsyncAction(action.echo, {skipStartedAction: true})(echoWorker);
+
 function* echoStartedWatcher() {
 	while(true) {
 		const {payload} = yield take(action.echo.started);
 		try {
 			yield call(createEchoServiceClientWorker);
-			yield call(echoWorker, payload);
-			yield put(action.echo.done(payload));
+			yield call(boundEchoWorker, payload);
 		} catch(e) {
-			yield put(action.echo.failed(e));
 			yield put(ducks.action.errors.push(e));
 		}
 	}
