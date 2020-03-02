@@ -1,44 +1,78 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+react-auth0-spa
+=============================================================
 
-## Available Scripts
+OpenID connet Login and API call sample with Auth0.
+This sample mainly depends on some tools below.
 
-In the project directory, you can run:
+- Frontend
+	- TypeScript
+	- auth0-spa-js
+	- react, redux, redux-saga 
+	- grpc-web
 
-### `yarn start`
+- Backend
+	- Go
+	- grpc-go
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Usage
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Please try this sample on Linux.
 
-### `yarn test`
+### configure Auth0
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- sign up [Auth0](https://auth0.com)
+- configure auth0 referring to [React: Login](https://auth0.com/docs/quickstart/spa/react/01-login) and write following items down
+	- domain
+	- client id
+- set "redirect uri" in auth0 setting to http://localhost:3000/callback
 
-### `yarn build`
+### execute Frontend
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- checkout this sample
+- execute this command
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+```
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- edit .env file like this
 
-### `yarn eject`
+```
+REACT_APP_DOMAIN=YOUR_AUTH0_DOMAIN_WROTE_DOWN_IN_THE_PREVIOUS_SECTION
+REACT_APP_CLIENT_ID=YOUR_AUTH0_CLIENT_ID_WROTE_DOWN_IN_THE_PREVIOUS_SECTION
+REACT_APP_REDIRECT_URI=http://localhost:3000/callback
+REACT_APP_ECHOSERVICE_URL=http://localhost:8080
+EXTEND_ESLINT=true
+```
+- execute this command
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+npm run start
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### execute Backend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- change directory
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+cd backend
+```
 
-## Learn More
+- build proxy image
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+docker build -t envoy:v1 .
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- run envoy
+
+```
+docker run --rm -d --net=host envoy:v1
+```
+
+- run API server
+
+```
+go build
+./backend
+```
