@@ -4,6 +4,8 @@ react-auth0-spa
 OpenID connet Login and API call sample with Auth0.
 This sample mainly depends on some tools below.
 
+[sample](https://user-images.githubusercontent.com/254112/75658899-6cefb300-5cac-11ea-9509-41640ede899c.gif)
+
 - Frontend
 	- TypeScript
 	- auth0-spa-js
