@@ -4,9 +4,9 @@ import { Jumbotron } from 'react-bootstrap';
 export const Home = () => {
 	return (
 		<Jumbotron className="mt-4">
-			<h1>React Auth0 Sample</h1>
+			<h1>React Auth0 Example</h1>
 			<p>
-				This is sample.
+				hello.
 			</p>
 		</Jumbotron>
 	);
