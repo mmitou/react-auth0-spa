@@ -3,8 +3,7 @@ react-auth0-spa
 
 Auht0 Login and API call example.
 
-![sample](https://user-images.githubusercontent.com/254112/75658899-6cefb300-5cac-11ea-9509-41640ede899c.gif)
-
+![sample](https://user-images.githubusercontent.com/254112/75743456-66b51180-5d54-11ea-84d8-53ac563f88a2.gif)
 This sample mainly depends on some tools below.
 
 - Frontend
