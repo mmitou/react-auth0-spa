@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/grpc-ecosystem/go-grpc-middleware"
@@ -22,12 +23,12 @@ import (
 )
 
 var (
-	port    = flag.Int("port", 9090, "The server port")
-	jwksUri = "https://dev-ag9zx3un.auth0.com/.well-known/jwks.json"
+	port = flag.Int("port", 9090, "The server port")
 )
 
 // auth
 func getKey(token *jwt.Token) (interface{}, error) {
+	jwksUri := os.Getenv("JWKS_ENDPOINT")
 	jwks, err := jwk.FetchHTTP(jwksUri)
 	if err != nil {
 		xerr := xerrors.Errorf("jwk.FetchHTTP(%s) failed: %v", jwksUri, err)
@@ -55,14 +56,40 @@ func authFunc(ctx context.Context) (context.Context, error) {
 		return nil, err
 	}
 	fmt.Printf("tokenString: %s\n", tokenString)
+
 	token, err := jwt.Parse(tokenString, getKey)
 	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "token parse failed: %v", err)
+		return nil, status.Errorf(codes.Unauthenticated, "jwt parse failed: %v", err)
+	}
+	if !token.Valid {
+		return nil, status.Errorf(codes.Unauthenticated, "token is invalid")
 	}
 
-	fmt.Println("token: %+v\n", token)
-	newCtx := context.WithValue(ctx, "token", token)
+	fmt.Printf("token header: %v\n", token.Header)
+	err = token.Claims.Valid()
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "token.claims are invalid")
+	}
 
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, status.Errorf(codes.Unauthenticated, "token.claims are invalid")
+	}
+	fmt.Printf("token claims: %v\n", claims)
+
+	clientID := os.Getenv("CLIENT_ID")
+	ok = claims.VerifyAudience(clientID, true)
+	if !ok {
+		return nil, status.Errorf(codes.Unauthenticated, "aud claim is invalid")
+	}
+
+	issuer := os.Getenv("ISSUER")
+	ok = claims.VerifyIssuer(issuer, true)
+	if !ok {
+		return nil, status.Errorf(codes.Unauthenticated, "iss claim is invalid")
+	}
+
+	newCtx := context.WithValue(ctx, "token", token)
 	return newCtx, nil
 }
 
@@ -91,6 +118,15 @@ func (s *echoServer) Echo(ctx context.Context, req *pb.EchoRequest) (*pb.EchoRes
 }
 
 func main() {
+	id := os.Getenv("CLIENT_ID")
+	jwksUri := os.Getenv("JWKS_ENDPOINT")
+	issuer := os.Getenv("ISSUER")
+	fmt.Printf("CLIENT_ID: %s\n", id)
+	fmt.Printf("JWKS_ENDPOINT: %s\n", jwksUri)
+	fmt.Printf("ISSUER: %s\n", issuer)
+	if id == "" || jwksUri == "" || issuer == "" {
+		log.Fatal("env not found")
+	}
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
