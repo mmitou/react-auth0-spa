@@ -74,9 +74,14 @@ docker build -t envoy:v1 .
 docker run --rm -d --net=host envoy:v1
 ```
 
-- run API server
+- run API server with env variables
 
 ```
 go build
-./backend
+JWKS_ENDPOINT=YOUR_JWKS_ENDPOINT CLIENT_ID=YOUR_AUTH0_CLIENT_ID ISSUER=YOUR_ISSUER_URI ./backend
 ```
+
+env examples
+- JWKS_ENDPOINT https://dev-ag9zx3un.auth0.com/.well-known/jwks.json
+- ISSUER https://dev-ag9zx3un.auth0.com/
+

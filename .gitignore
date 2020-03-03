@@ -27,3 +27,4 @@ yarn-error.log*
 /backend/backend
 /backend/echo/*.pb.*
 src/echo/*
+backend/env
