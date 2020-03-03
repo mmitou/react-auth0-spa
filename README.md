@@ -5,7 +5,7 @@ Auht0 Login and API call example.
 
 ![sample](https://user-images.githubusercontent.com/254112/75743456-66b51180-5d54-11ea-84d8-53ac563f88a2.gif)
 
-
+<br />
 This sample mainly depends on some tools below.
 
 - Frontend
