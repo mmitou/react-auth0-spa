@@ -34,6 +34,7 @@ static_resources:
                   expose_headers: custom-header-1,grpc-status,grpc-message
                   allow_headers: authorization, keep-alive,user-agent,cache-control,content-type,content-transfer-encoding,custom-header-1,x-accept-content-transfer-encoding,x-accept-response-streaming,x-user-agent,x-grpc-web,grpc-timeout
             http_filters:
+            - name: envoy.filters.http.jwt_authn
             - name: envoy.grpc_web
             - name: envoy.cors
             - name: envoy.router
