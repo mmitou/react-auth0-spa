@@ -18,7 +18,9 @@ function* createEchoServiceClientWorker() {
 		if (process.env.REACT_APP_ECHOSERVICE_URL == null) {
 			throw new Error("process.env.REACT_APP_ECHOSERVICE_URL is not defined");
 		}
-		const newClient = new EchoServiceClient(process.env.REACT_APP_ECHOSERVICE_URL);
+		const newClient = new EchoServiceClient(process.env.REACT_APP_ECHOSERVICE_URL, null, {
+			withCredentials: "true"
+		});
 		yield put(ducks.action.echo.setClient(newClient));
 	}
 }
