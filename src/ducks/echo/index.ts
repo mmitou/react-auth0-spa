@@ -10,10 +10,10 @@ export type State = {
 };
 
 // action
-const actionCreator = actionCreatorFactory();
+const actionCreator = actionCreatorFactory('echo');
 export const action = {
-	setClient: actionCreator<EchoServiceClient>('echo/SET_ECHOSERVICECLIENT'),
-	setEchoResponse: actionCreator<EchoResponse | null>('echo/SET_ECHORESPONSE'),
+	setClient: actionCreator<EchoServiceClient>('SET_ECHOSERVICECLIENT'),
+	setEchoResponse: actionCreator<EchoResponse | null>('SET_ECHORESPONSE'),
 };
 
 // reducer

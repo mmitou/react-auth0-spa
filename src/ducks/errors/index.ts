@@ -7,10 +7,10 @@ export type State = {
 };
 
 // action
-const actionCreator = actionCreatorFactory();
+const actionCreator = actionCreatorFactory('errors');
 export const action = {
-	push: actionCreator<Error>('errors/push'),
-	pop: actionCreator('errors/pop'),
+	push: actionCreator<Error>('PUSH'),
+	pop: actionCreator('POP'),
 };
 
 // reducer
