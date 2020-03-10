@@ -6,9 +6,9 @@ import { EchoServiceClient } from 'echo/EchoServiceClientPb';
 import { EchoRequest, EchoResponse } from 'echo/echo_pb';
 
 // action
-const actionCreator = actionCreatorFactory();
+const actionCreator = actionCreatorFactory('echo');
 export const action = {
-	echo: actionCreator.async<string, null, Error>('echo/ECHO')
+	echo: actionCreator.async<string, null, Error>('ECHO')
 };
 
 // saga

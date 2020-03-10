@@ -5,11 +5,11 @@ import * as ducks from 'ducks';
 import createAuth0Client from '@auth0/auth0-spa-js';
 
 // action
-const actionCreator = actionCreatorFactory();
+const actionCreator = actionCreatorFactory('auth0');
 export const action = {
-	handleRedirectCallback: actionCreator.async<void, void, Error>('auth0/HANDLE_REDIRECT_CALLBACK'),
-	loginWithRedirect: actionCreator.async<void, void, Error>('auth0/LOGIN_WITH_REDIRECT'),
-	logout: actionCreator.async<void, void, Error>('auth0/LOGOUT'),
+	handleRedirectCallback: actionCreator.async<void, void, Error>('HANDLE_REDIRECT_CALLBACK'),
+	loginWithRedirect: actionCreator.async<void, void, Error>('LOGIN_WITH_REDIRECT'),
+	logout: actionCreator.async<void, void, Error>('LOGOUT'),
 };
 
 // saga
