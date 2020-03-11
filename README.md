@@ -62,12 +62,6 @@ npm run start
 cd backend
 ```
 
-- build proxy image
-
-```
-docker build -t envoy:v1 .
-```
-
 - run envoy
 
 ```
