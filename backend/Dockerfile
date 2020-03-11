@@ -1,10 +1,12 @@
-FROM golang:1.13 as builder
+FROM golang:alpine as build
+RUN apk --no-cache add ca-certificates
 WORKDIR /root/go/src/github.com/mmitou/react-auth0-spa/backend
 COPY ./ .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -v -o echo-service main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o echo-service main.go
 
 FROM scratch
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 WORKDIR /bin/
-COPY --from=builder /root/go/src/github.com/mmitou/react-auth0-spa/backend/echo-service .
+COPY --from=build /root/go/src/github.com/mmitou/react-auth0-spa/backend/echo-service .
 ENTRYPOINT [ "/bin/echo-service" ]
 EXPOSE 9090

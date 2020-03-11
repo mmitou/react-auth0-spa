@@ -71,14 +71,24 @@ docker build -t envoy:v1 .
 - run envoy
 
 ```
-docker run --rm -d --net=host envoy:v1
+docker run --rm -d --net=host -v ${PWD}/:/etc/envoy/  envoyproxy/envoy:v1.12.3 
 ```
 
 - run API server with env variables
 
+at first, make env file for API server.
+save env variables below as env.
+
 ```
-go build
-JWKS_ENDPOINT=YOUR_JWKS_ENDPOINT CLIENT_ID=YOUR_AUTH0_CLIENT_ID ISSUER=YOUR_ISSUER_URI ./backend
+JWKS_ENDPOINT=YOUR_JWKS_ENDPOINT
+CLIENT_ID=YOUR_AUTH0_CLIENT_ID
+ISSUER=YOUR_ISSUER_URI ./backend
+```
+
+run API server
+```
+docker build -t mmitou/echo-service .
+docker run --rm -it --env-file env -p 9090:9090 mmitou/echo-service
 ```
 
 env examples
