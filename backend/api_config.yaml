@@ -1,0 +1,8 @@
+type: google.api.Service
+config_version: 3
+
+name: echo.endpoints.gke-test1227.cloud.goog
+
+title: echo gRPC API
+apis:
+- name: echo.EchoService
