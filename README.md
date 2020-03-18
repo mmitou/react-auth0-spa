@@ -68,24 +68,24 @@ cd backend
 docker run --rm -d --net=host -v ${PWD}/:/etc/envoy/  envoyproxy/envoy:v1.12.3 
 ```
 
-- run API server with env variables
+- run API server
 
-at first, make env file for API server.
-save env variables below as env.
-
-```
-JWKS_ENDPOINT=YOUR_JWKS_ENDPOINT
-CLIENT_ID=YOUR_AUTH0_CLIENT_ID
-ISSUER=YOUR_ISSUER_URI ./backend
-```
-
-run API server
 ```
 docker build -t mmitou/echo-service .
 docker run --rm -it --env-file env -p 9090:9090 mmitou/echo-service
 ```
 
-env examples
-- JWKS_ENDPOINT https://dev-ag9zx3un.auth0.com/.well-known/jwks.json
-- ISSUER https://dev-ag9zx3un.auth0.com/
+### execute Backend on GKE
 
+```
+cd backend
+gcloud builds submit -t gcr.io/[YOUR_GCP_PROJECT_ID]/echo-service .
+cd envoy
+gcloud builds submit -t gcr.io/[YOUR_GCP_PROJECT_ID]/envoy-grpc .
+gcloud container clusters create sample
+gcloud container clusters get-credentials sample
+kubectl apply -f sample-sidecar.yaml
+kubectl get services -w
+```
+
+after a while, if sample-lb gets external ip, set the ip to frontend env file and execute "npm run start".
