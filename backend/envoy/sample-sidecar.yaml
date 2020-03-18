@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-lb
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http-port
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+  selector:
+    app: sample-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: envoy-local
+          image: gcr.io/gke-test1227/envoy-grpc
+          ports:
+            - containerPort: 8080
+        - name: echo-service
+          image: gcr.io/gke-test1227/echo-service
+          ports:
+            - containerPort: 9090
