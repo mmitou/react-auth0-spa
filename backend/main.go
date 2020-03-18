@@ -9,7 +9,6 @@ import (
 	"os"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"github.com/lestrrat/go-jwx/jwk"
 	"golang.org/x/xerrors"
@@ -118,25 +117,13 @@ func (s *echoServer) Echo(ctx context.Context, req *pb.EchoRequest) (*pb.EchoRes
 }
 
 func main() {
-	id := os.Getenv("CLIENT_ID")
-	jwksUri := os.Getenv("JWKS_ENDPOINT")
-	issuer := os.Getenv("ISSUER")
-	fmt.Printf("CLIENT_ID: %s\n", id)
-	fmt.Printf("JWKS_ENDPOINT: %s\n", jwksUri)
-	fmt.Printf("ISSUER: %s\n", issuer)
-	if id == "" || jwksUri == "" || issuer == "" {
-		log.Fatal("env not found")
-	}
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("listening port %d\n", *port)
-	server := grpc.NewServer(grpc.UnaryInterceptor(
-		grpc_middleware.ChainUnaryServer(
-			unaryServerInterceptor(),
-			grpc_auth.UnaryServerInterceptor(authFunc))))
+	server := grpc.NewServer()
 	pb.RegisterEchoServiceServer(server, &echoServer{})
 	reflection.Register(server)
 	server.Serve(lis)
