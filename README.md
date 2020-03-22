@@ -67,7 +67,7 @@ cd backend
 - run envoy
 
 ```
-docker run --rm -d --net=host -v ${PWD}/:/etc/envoy/  envoyproxy/envoy:v1.12.3 
+docker run --rm -d --net=host -v ${PWD}/envoy/:/etc/envoy/  envoyproxy/envoy:v1.12.3 
 ```
 
 - run API server
