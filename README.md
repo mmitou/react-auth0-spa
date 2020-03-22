@@ -3,12 +3,12 @@ react-auth0-spa
 This sample contains some codes and configurations of 
 - Login by OpenID connect with Auth0
 - grpc-web with redux-saga
-- envoy and gRPC service on GKE
+- gRPC service on istio on GKE
 
 ![sample](https://user-images.githubusercontent.com/254112/75743456-66b51180-5d54-11ea-84d8-53ac563f88a2.gif)
 
 <br />
-This sample mainly depends on some tools below.
+This sample mainly depends on these tools below.
 
 - Frontend
 	- TypeScript
