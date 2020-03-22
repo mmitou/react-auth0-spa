@@ -91,3 +91,15 @@ kubectl get services -w
 ```
 
 after a while, if sample-lb gets external ip, set the ip to frontend env file and execute "npm run start".
+
+### execute Backend on istio on GKE
+
+```
+cd backend
+gcloud builds submit -t gcr.io/[YOUR_GCP_PROJECT_ID]/echo-service .
+cd istio
+gcloud beta container clusters create sample --addons=Istio
+gcloud container clusters get-credentials sample
+kubectl apply -f sample.yaml
+kubectl apply -f istio.yaml
+```
