@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-service
+spec:
+  type: ClusterIP
+  ports:
+    - name: grpc-web
+      port: 80
+      targetPort: 9090
+  selector:
+    app: echo-service-worker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: echo-service-worker
+    spec:
+      containers:
+        - name: echo-service-container
+          image: gcr.io/gke-test1227/echo-service
+          ports:
+            - containerPort: 9090
