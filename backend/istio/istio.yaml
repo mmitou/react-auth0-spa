@@ -23,11 +23,6 @@ spec:
   gateways:
   - gateway
   http:
-  - route:
-    - destination:
-      host: echo-service
-      port:
-        number: 9090
   - match:
     - uri:
         prefix: /echo.EchoService
